@@ -5,3 +5,50 @@ html, body {
   height: 100%;
   overflow: hidden;
 }
+
+#wrapper{
+    position: relative;
+}
+.content{
+    position: relative;
+    z-index: 100;
+}
+.background{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -100;
+}
+
+
+
+#head {
+  font-family: 'Roboto', Black;
+  font-size: 40px;
+  font-weight: bold;
+  line-height: 75px;
+  text-align: center;
+  margin: 50px auto;
+  width: 90%;
+  -webkit-font-smoothing: antialiased;
+}
+
+#text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 30x;
+  line-height: 32px;
+  color: #262626;
+  text-align: justify;
+  margin: 50px auto;
+  width: 90%;
+  -webkit-font-smoothing: antialiased;
+}
+
+#text a{
+    color: #4d4d4d;
+    text-decoration: none;
+}
+
+#text a:hover {
+    text-decoration: underline;
+}
