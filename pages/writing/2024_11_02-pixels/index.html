@@ -12,6 +12,14 @@
 ></script>
 </head>
 <body>
+    <script>
+        window.addEventListener('load', function () {
+            gradioURL = window.location.href
+            if (!gradioURL.endsWith('?__theme=light')) {
+              window.location.replace(window.location.href + '?__theme=light');
+            }
+          });
+    </script>
     <div id="wrapper">
         <div class="content">
             <!-- Header -->
