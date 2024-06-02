@@ -12,6 +12,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 -->
  */
 
+var mouseX = 0, mouseY = 0;
+document.addEventListener('mousemove', onDocumentMouseMove, false);
+function onDocumentMouseMove(event) {
+    mouseX = (event.clientX - windowHalfX) / 2;
+    mouseY = (event.clientY - windowHalfY) / 2;
+}
+
 THREE.SpriteCanvasMaterial = function ( parameters ) {
 
 	THREE.Material.call( this );
@@ -432,11 +439,11 @@ THREE.CanvasRenderer = function ( parameters ) {
 
 		}
 
-		/* DEBUG
-		setLineWidth( 1 );
-		setStrokeStyle( 'rgba( 255, 0, 0, 0.5 )' );
-		_context.strokeRect( _clearBox.min.x, _clearBox.min.y, _clearBox.max.x - _clearBox.min.x, _clearBox.max.y - _clearBox.min.y );
-		*/
+		
+		// setLineWidth( 1 );
+		// setStrokeStyle( 'rgba( 255, 0, 0, 0.5 )' );
+		// _context.strokeRect( _clearBox.min.x, _clearBox.min.y, _clearBox.max.x - _clearBox.min.x, _clearBox.max.y - _clearBox.min.y );
+		
 
 		_context.setTransform( 1, 0, 0, 1, 0, 0 );
 
@@ -614,15 +621,16 @@ THREE.CanvasRenderer = function ( parameters ) {
 
 		}
 
-		/* DEBUG
-		setStrokeStyle( 'rgb(255,255,0)' );
-		_context.beginPath();
-		_context.moveTo( v1.x - 10, v1.y );
-		_context.lineTo( v1.x + 10, v1.y );
-		_context.moveTo( v1.x, v1.y - 10 );
-		_context.lineTo( v1.x, v1.y + 10 );
-		_context.stroke();
-		*/
+		
+		
+		// setStrokeStyle( 'rgb(255,255,0)' );
+		// _context.beginPath();
+		// _context.moveTo( v1.x - 10, v1.y );
+		// _context.lineTo( v1.x + 10, v1.y );
+		// _context.moveTo( v1.x, v1.y - 10 );
+		// _context.lineTo( v1.x, v1.y + 10 );
+		// _context.stroke();
+		
 
 	}
 
@@ -2229,7 +2237,7 @@ THREE.Projector = function () {
 
 
 	if($('#home_wave').length > 0) {
-		var SEPARATION = 200, AMOUNTX = 40, AMOUNTY = 60;
+		var SEPARATION = 250, AMOUNTX = 40, AMOUNTY = 60;
 		var container, stats;
 		var camera, scene, renderer;
 
@@ -2335,8 +2343,15 @@ THREE.Projector = function () {
 
 	function render() {
 
+		camera.position.set(0,400,122);
+		// camera.lookAt()
 
-		camera.position.set(0,355,122);
+		camera.position.set(0,400,mouseY*5);
+		// camera.lookAt( scene.position );
+		// camera.position.x += (mouseX - camera.position.x) * 0.05;
+    	// camera.position.y += (-mouseY - camera.position.y) * 0.05;
+    	// camera.lookAt(scene.position);
+		// camera.position.set(mouseY, 355+mouseX, 122);
 
 		var i = 0;
 
@@ -2356,6 +2371,6 @@ THREE.Projector = function () {
 
 		renderer.render( scene, camera );
 
-		count += 0.1;
+		count += 0.04;
 
 	}
