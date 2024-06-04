@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gyroscope Demo</title>
+</head>
+<body>
+    <h1>Gyroscope Data</h1>
+    <p id="alpha">Loading...</p>
+
+    <script>
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', function(event) {
+                if (event.alpha !== null) {
+                  var deviceX = event.alpha.toFixed(0);
+                  var deviceY = event.beta.toFixed(0);
+                  var deviceZ = event.gamma.toFixed(0);
+                    document.getElementById('alpha').textContent = 'x: ' + deviceX + '\ny: ' + deviceY + '\nz: ' + deviceZ;
+                }
+            }, true);
+        } else {
+            document.getElementById('alpha').textContent = 'Gyroscope not supported';
+        }
+    </script>
+</body>
+</html>

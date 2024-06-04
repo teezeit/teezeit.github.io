@@ -13,6 +13,37 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 
 var mouseX = 0, mouseY = 0;
+var deviceX = 0, deviceY = 45, deviceZ = 0; // rotate, lift, tilt
+var deviceYReference = 45;
+var deviceXReference = 0;
+var runInit = false;
+var useGyroscope = false;
+
+if (window.DeviceOrientationEvent) {
+	window.addEventListener('deviceorientation', function(event) {
+		if (event.alpha !== null) {
+			// document.getElementById('alpha').textContent = event.alpha.toFixed(3) + ' degree';
+			deviceX = event.alpha.toFixed(0);
+			deviceY = event.beta.toFixed(0);
+			deviceZ = event.gamma.toFixed(0);
+			if (!runInit) {
+				deviceYReference = deviceY;
+				deviceXReference = deviceX;
+				useGyroscope = true;
+				runInit = true;
+			}
+			document.getElementById('alpha').textContent = 'x: ' + deviceX + '\ny: ' + deviceY + '\nz: ' + deviceZ;
+
+		}
+	}, true);
+} else {
+	// document.getElementById('alpha').textContent = 'Gyroscope not supported';
+	console.log('Gyroscope not supported or not on mobile');
+	// document.getElementById('alpha').textContent = 'Gyroscope not supported or not on mobile';
+
+}
+
+
 document.addEventListener('mousemove', onDocumentMouseMove, false);
 function onDocumentMouseMove(event) {
     mouseX = (event.clientX - windowHalfX) / 2;
@@ -2343,10 +2374,22 @@ THREE.Projector = function () {
 
 	function render() {
 
-		camera.position.set(0,400,122);
+		// default
+		// camera.position.set(0,400,122);
 		// camera.lookAt()
+		if (useGyroscope) {
+			let x = 20*(deviceX-deviceXReference)
+			let z = 100*(deviceY-deviceYReference)
+			// camera.position.set(0,z,z);
+			camera.position.set(-x,400,122+z);
+			// camera.position.set(0,400,z); worked
+		} else {
+			let z = 122+mouseY*7;
+			let x = mouseX*7;
+			camera.position.set(x,400,z);
+		}
+		
 
-		camera.position.set(0,400,mouseY*5);
 		// camera.lookAt( scene.position );
 		// camera.position.x += (mouseX - camera.position.x) * 0.05;
     	// camera.position.y += (-mouseY - camera.position.y) * 0.05;
