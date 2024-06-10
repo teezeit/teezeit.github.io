@@ -1,59 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CEMF77DBBJ"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-CEMF77DBBJ"
+    ></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-CEMF77DBBJ');
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-CEMF77DBBJ");
     </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../../css/style.css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:400,900" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../../../css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:400,900"
+      rel="stylesheet"
+    />
     <style>
-        iframe {
-            height: 100vh;
-            width: 100%;
-            border: none;
+      iframe {
+        height: 100vh;
+        width: 100%;
+        border: none;
+      }
+
+      /* Spinner styles */
+      .spinner {
+        border: 8px solid rgba(0, 0, 0, 0.1);
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 2s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
         }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .spinner-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 9999;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #head {
+        text-align: center;
+        margin-bottom: 20px; /* Adjust margin to move spinner down */
+        font-size: 1.2em;
+        font-weight: bold;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="wrapper">
-        <div class="content">
-            <!-- Header -->
-            <div id="text">
-                <a href="../../index.html">
-                    Tobias Hoelzer
-                </a>
-                &nbsp;
-                <a href="../../pages/writing/index.html">
-                    Writing
-                </a>
-            </div>
-            <div id="text" style="text-align:justify;">
-                <p>
-                    <a href="../../pages/writing/2024_11_02-medication_modelling/index.html">The Science behind this App - Modelling Elvanse Medication Concentration over time.</a>
-                </p>
-                <p>
-                    <a href="https://github.com/teezeit/medication-calculator">You can contribute here.</a>
-                </p>
-            </div>
-
-
-            <iframe src="https://medication-calculator.streamlit.app/?embed=true&embed_options=light_theme">
-            </iframe>
-
-            <!-- height="700"
-width="100%"
-frameborder="0" -->
-
+      <div class="content">
+        <!-- Header -->
+        <div id="text">
+          <a href="../../index.html"> Tobias Hoelzer </a>
+          &nbsp;
+          <a href="../../pages/writing/index.html"> Writing </a>
         </div>
-</body>
+        <div id="text" style="text-align: justify">
+          <p>
+            <a
+              href="../../pages/writing/2024_11_02-medication_modelling/index.html"
+              >The Science behind this App - Modelling Elvanse Medication
+              Concentration over time.</a
+            >
+          </p>
+          <p>
+            <a href="https://github.com/teezeit/medication-calculator"
+              >You can contribute here.</a
+            >
+          </p>
+        </div>
 
+        <div id="spinner-container" class="spinner-container">
+          <div id="head">Loading App</div>
+          <div class="spinner"></div>
+        </div>
+
+        <iframe
+          id="content-iframe"
+          src="https://medication-calculator.streamlit.app/?embed=true&embed_options=light_theme"
+        ></iframe>
+      </div>
+    </div>
+
+    <script>
+      const iframe = document.getElementById("content-iframe");
+      const spinnerContainer = document.getElementById("spinner-container");
+
+      iframe.onload = () => {
+        spinnerContainer.classList.add("hidden");
+      };
+    </script>
+  </body>
 </html>
