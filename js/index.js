@@ -2184,27 +2184,25 @@ function animate() {
 }
 
 function render() {
-  // default
-  // camera.position.set(0,400,122);
-  // camera.lookAt()
+  let targetX, targetZ;
+
   if (useGyroscope) {
     // Handle alpha wraparound (360 to 0 transition)
     let alphaDiff = deviceX - deviceXReference;
     if (alphaDiff > 180) alphaDiff -= 360;
     if (alphaDiff < -180) alphaDiff += 360;
 
-    let targetX = -20 * alphaDiff;
-    let targetZ = 122 + 100 * (deviceY - deviceYReference);
-
-    // Smooth interpolation for smoother movement
-    camera.position.x += (targetX - camera.position.x) * 0.04;
-    camera.position.z += (targetZ - camera.position.z) * 0.04;
-    camera.position.y = 400;
+    targetX = -20 * alphaDiff;
+    targetZ = 122 + 100 * (deviceY - deviceYReference);
   } else {
-    let z = 122 + mouseY * 7;
-    let x = mouseX * 7;
-    camera.position.set(x, 400, z);
+    targetX = mouseX * 7;
+    targetZ = 122 + mouseY * 7;
   }
+
+  // Smooth interpolation for both desktop and mobile
+  camera.position.x += (targetX - camera.position.x) * 0.04;
+  camera.position.z += (targetZ - camera.position.z) * 0.04;
+  camera.position.y = 400;
 
   // camera.lookAt( scene.position );
   // camera.position.x += (mouseX - camera.position.x) * 0.05;
