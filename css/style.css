@@ -56,6 +56,10 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
+.mobile-break {
+  display: none;
+}
+
 @media only screen and (max-width: 600px) {
   #head {
     font-size: 2em;
@@ -63,6 +67,9 @@ html, body {
   #text {
     width: 95%;
     font-size: 1em;
+  }
+  .mobile-break {
+    display: block;
   }
 }
 
