@@ -22,52 +22,8 @@
       rel="stylesheet"
     />
     <style>
-      iframe {
-        height: 100vh;
-        width: 100%;
-        border: none;
-      }
-
-      /* Spinner styles */
-      .spinner {
-        border: 8px solid rgba(0, 0, 0, 0.1);
-        border-top: 8px solid #3498db;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        animation: spin 2s linear infinite;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      .spinner-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background-color: rgba(255, 255, 255, 0.8);
-        z-index: 9999;
-      }
-
-      .hidden {
-        display: none;
-      }
-
       #head {
         text-align: center;
-        margin-bottom: 20px; /* Adjust margin to move spinner down */
         font-size: 1.2em;
         font-weight: bold;
       }
@@ -96,27 +52,11 @@
               >You can contribute here.</a
             >
           </p>
+          <p>
+            <a href="https://teezeit.github.io/medication-calculator">Open the App</a>
+          </p>
         </div>
-
-        <div id="spinner-container" class="spinner-container">
-          <div id="head">Loading App</div>
-          <div class="spinner"></div>
-        </div>
-
-        <iframe
-          id="content-iframe"
-          src="https://medication-calculator.streamlit.app/?embed=true&embed_options=light_theme"
-        ></iframe>
       </div>
     </div>
-
-    <script>
-      const iframe = document.getElementById("content-iframe");
-      const spinnerContainer = document.getElementById("spinner-container");
-
-      iframe.onload = () => {
-        spinnerContainer.classList.add("hidden");
-      };
-    </script>
   </body>
 </html>
