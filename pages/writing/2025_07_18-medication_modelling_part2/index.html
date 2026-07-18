@@ -370,27 +370,17 @@ effective(t) = [C(t) / CMAX_PER_MG] / (1 + T(t)) &times; circadian(t) &times; pe
           <h3>How to Use It</h3>
 
           <p>
-            The model is still a planning tool, not a predictor. Your personal
-            threshold is the main thing to set - the level below which you feel
-            worn off. If you only ever take one medication, that's honestly
-            close to enough: set it once to match your actual wearing-off time,
-            then use the app to plan timing and dosing changes before trying
-            them.
-          </p>
-
-          <p>
-            Three more sliders exist for everyone else. The moment you're
-            comparing two different drug classes - not just two doses of the
-            same one - a single threshold stops being sufficient. Normalization
-            equalizes the dose-equivalent scale, but it can't know that
-            Concerta hits you harder than Elvanse does, or that your own
-            tolerance builds faster on one than the other. That residual,
-            personal difference is exactly what these sliders are for:
+            The model is still a planning tool, not a predictor. Four sliders
+            let you calibrate it. With one medication, the first is nearly
+            enough; the other three matter once you're comparing drug classes,
+            where normalization can't capture your personal potency or
+            tolerance differences between them.
           </p>
 
           <ul style="padding-left: 20px; margin: 0 0 16px 0;">
-            <li><strong>Onset</strong> - how long the prodrug conversion actually takes for you, if not the modelled default.</li>
-            <li><strong>Wearing-off strength</strong> - how aggressively your tolerance compartment builds up through the day.</li>
+            <li><strong>Personal threshold</strong> - the level below which you feel worn off.</li>
+            <li><strong>Onset</strong> - how long the prodrug conversion actually takes for you.</li>
+            <li><strong>Wearing-off strength</strong> - how aggressively tolerance builds through the day.</li>
             <li><strong>Personal effect strength</strong> - your own correction on top of the dose-normalization, per medication.</li>
           </ul>
 
