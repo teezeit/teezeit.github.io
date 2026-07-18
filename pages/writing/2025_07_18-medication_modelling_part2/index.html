@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-CEMF77DBBJ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-CEMF77DBBJ");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../../../css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:400,900"
+      rel="stylesheet"
+    />
+    <style>
+      /* Subtitle much less intrusive than the site default - closer to a section heading */
+      #head2 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.2em;
+        font-weight: 600;
+        line-height: 1.4em;
+        margin: 10px auto 40px auto;
+      }
+      .chart-card {
+        border: 1px solid #e8e8e8;
+        border-radius: 10px;
+        padding: 16px 18px 12px 18px;
+        margin: 18px auto 22px auto;
+        max-width: 600px;
+        background: #fff;
+      }
+      .chart-card img {
+        display: block;
+        width: 100%;
+      }
+      .chart-card-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 2px;
+      }
+      .chart-legend {
+        display: flex;
+        gap: 16px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+      }
+      .chart-legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #666;
+      }
+      .chart-legend-line {
+        width: 22px;
+        height: 2px;
+        border-radius: 1px;
+      }
+      .drug-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin: 18px auto 22px auto;
+        max-width: 600px;
+      }
+      .drug-card {
+        border: 1px solid #e8e8e8;
+        border-radius: 10px;
+        padding: 14px 18px 10px 18px;
+        background: #fff;
+      }
+      .drug-card img {
+        display: block;
+        width: 100%;
+      }
+      .drug-card-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="wrapper">
+      <div class="content">
+        <div id="text">
+          <a href="../../../index.html">Tobias Hoelzer</a>
+          &nbsp;
+          <a href="../index.html">Writing</a>
+        </div>
+        <div id="head">
+          ADHD Medication Modelling, Part 2: From Plasma to Effect
+        </div>
+        <div id="head2">Do you also forget when to take your meds?</div>
+
+        <div id="text" style="text-align: justify">
+          <p>
+            I built
+            <a href="https://teezeit.github.io/medication-calculator"
+              >an app for that</a
+            >.
+          </p>
+
+          <div style="display: flex; gap: 14px; justify-content: center; align-items: flex-start; margin: 4px 0 24px 0;">
+            <img
+              src="../../../assets/medication-calculator-preview.png"
+              alt="A small preview of the app: dose entry, a big effect number, and the resulting concentration curve"
+              style="display: block; max-width: 160px; width: 45%; border: 1px solid #e8e8e8; border-radius: 10px;"
+            />
+            <img
+              src="../../../assets/medication-calculator-settings.png"
+              alt="A small preview of the app's in-app help screen, showing sliders next to before/after curve previews"
+              style="display: block; max-width: 160px; width: 45%; border: 1px solid #e8e8e8; border-radius: 10px;"
+            />
+          </div>
+
+          <p>
+            In the first post, I modelled Elvanse concentration in the
+            bloodstream over the course of a day. You could plug in your dose
+            and timing and see what your blood levels might look like. Useful -
+            but it had one obvious problem. The curve said your medication was
+            still active. Your brain said otherwise.
+          </p>
+
+          <h3>Plasma != Effect</h3>
+
+          <p>
+            Plasma concentration and therapeutic effect are not the same thing.
+            If you plot effect against concentration over time, you get a
+            clockwise loop: on the way up, rising plasma produces rising effect.
+            On the way down, the same concentration that felt sharp at 10am does
+            nothing at 3pm. This is acute tolerance. The system adapts to
+            sustained stimulation and reduces its response over the day. It
+            resets overnight - not cumulative.
+          </p>
+
+          <h3>The Tolerance Compartment</h3>
+
+          <p>
+            To model this, I add a tolerance compartment - a hidden state
+            variable T that grows with drug exposure and decays when the drug
+            clears:
+          </p>
+
+          <pre>
+effective(t) = C(t) / (1 + T(t))
+
+dT/dt = k_tol * C(t) - k_deg * T(t)</pre
+          >
+
+          <div class="chart-card">
+            <img
+              src="chart-tolerance.png"
+              alt="Plasma concentration rising then falling, tolerance rising and lagging behind, and the resulting effective response peaking early and fading well before plasma does"
+            />
+            <div class="chart-legend">
+              <div class="chart-legend-item">
+                <div class="chart-legend-line" style="background: #bbb"></div>
+                plasma
+              </div>
+              <div class="chart-legend-item">
+                <div
+                  class="chart-legend-line"
+                  style="border-top: 2px dashed #f0a500; width: 22px"
+                ></div>
+                tolerance
+              </div>
+              <div class="chart-legend-item">
+                <div
+                  class="chart-legend-line"
+                  style="background: #374151"
+                ></div>
+                effective
+              </div>
+            </div>
+          </div>
+
+          <p>
+            The tricky part is calibrating k_tol. Published values come from
+            euphoria studies in healthy volunteers at recreational doses -
+            completely wrong for ADHD use. Using them makes the model predict
+            wearing-off two to three hours too early. Much tolerance. Very
+            wrong. For therapeutic use, it's about a third of the literature
+            default.
+          </p>
+
+          <h3>The Circadian Dip</h3>
+
+          <p>
+            Time of day matters too, independent of drug levels. The
+            mid-afternoon dip is real and lands right when the drug is already
+            descending. A simple cosine term handles this. Whether you feel
+            great on an 8am dose through 6pm some days and crash at 3pm on
+            others under identical conditions - now there's a model for that.
+          </p>
+
+          <div class="chart-card">
+            <img
+              src="chart-circadian.png"
+              alt="A cosine-shaped dip in effect through the day, bottoming out around 2:30pm, independent of drug concentration"
+            />
+          </div>
+
+          <h3>Elvanse, Medikinet, and Concerta</h3>
+
+          <p>
+            Each medication produces a different plasma profile - not just in
+            duration, but in shape. That shape matters because it determines how
+            fast concentration rises, whether there's a second peak, and whether
+            the drug can stay ahead of tolerance.
+          </p>
+
+          <div class="drug-cards">
+            <div class="drug-card">
+              <div class="drug-card-title">Elvanse</div>
+              <img
+                src="chart-elvanse.png"
+                alt="A single smooth rise and fall over the day"
+              />
+              <p
+                style="
+                  font-size: 13px;
+                  font-weight: 600;
+                  margin: 8px 0 4px 0;
+                  color: #222;
+                "
+              >
+                Why it rises and falls smoothly
+              </p>
+              <p
+                style="
+                  font-size: 13px;
+                  color: #555;
+                  margin: 0;
+                  line-height: 1.5;
+                "
+              >
+                The capsule itself is inactive - it's a prodrug. Your body has
+                to slowly convert it (in the red blood cells) before it becomes
+                real medication. That slow conversion is the rate-limiting step,
+                which is why the curve is one smooth hump.
+              </p>
+            </div>
+            <div class="drug-card">
+              <div class="drug-card-title">Medikinet</div>
+              <img
+                src="chart-medikinet.png"
+                alt="A curve with a small kink partway up, then a second rise, forming two bumps"
+              />
+              <p
+                style="
+                  font-size: 13px;
+                  font-weight: 600;
+                  margin: 8px 0 4px 0;
+                  color: #222;
+                "
+              >
+                Why it has two bumps
+              </p>
+              <p
+                style="
+                  font-size: 13px;
+                  color: #555;
+                  margin: 0;
+                  line-height: 1.5;
+                "
+              >
+                The capsule contains two kinds of pellets: white ones that
+                dissolve right away, and blue ones with a special coating that
+                only dissolves once it hits your gut later on. Each kind makes
+                its own peak.
+              </p>
+            </div>
+            <div class="drug-card">
+              <div class="drug-card-title">Concerta</div>
+              <img
+                src="chart-concerta.png"
+                alt="A small early bump followed by a long steady climb before tapering off"
+              />
+              <p
+                style="
+                  font-size: 13px;
+                  font-weight: 600;
+                  margin: 8px 0 4px 0;
+                  color: #222;
+                "
+              >
+                Why it climbs steadily instead of peaking
+              </p>
+              <p
+                style="
+                  font-size: 13px;
+                  color: #555;
+                  margin: 0;
+                  line-height: 1.5;
+                "
+              >
+                The outer coating (about 22% of the dose) dissolves immediately,
+                giving a small early bump. Underneath is an osmotic pump: water
+                seeps in through the shell and pushes medication out through a
+                laser-drilled hole at a rate engineered to speed up over the
+                day. After the early bump it just climbs steadily for hours,
+                then tapers off once the pump runs dry.
+              </p>
+            </div>
+          </div>
+
+          <p>
+            Why does Concerta's ascending profile matter? Flat delivery causes
+            afternoon tolerance - the system equilibrates to a stable signal and
+            downregulates. A continuously rising profile stays ahead of that.
+            Three Bateman components model this: the IR coat plus two
+            overlapping OROS layers.
+          </p>
+
+          <h3>The Units Problem</h3>
+
+          <p>
+            Adding multiple drug classes created a units problem. Elvanse peaks
+            around 100 ng/mL at 70mg. Medikinet peaks around 13 ng/mL at 40mg.
+            Both are full therapeutic doses - both hit the same target receptor
+            occupancy. But summing raw ng/mL makes Elvanse look eight times
+            stronger. I normalize each drug by its dose-to-peak ratio before the
+            pharmacodynamic layer, so a standard dose of any medication
+            contributes a comparable baseline. What's left - how strongly you
+            personally respond to each drug - you tune yourself.
+          </p>
+
+          <div class="chart-card">
+            <img
+              src="chart-units.png"
+              alt="Two panels: raw ng/mL shows Elvanse towering over Medikinet; after normalizing by dose-to-peak ratio, both curves sit at a comparable height"
+            />
+          </div>
+
+          <h3>Putting It All Together</h3>
+
+          <p>
+            Every piece above folds into one equation. Raw concentration gets
+            normalized, run through the tolerance compartment, modulated by the
+            circadian dip, then scaled by how strongly you personally respond:
+          </p>
+
+          <pre>
+effective(t) = [C(t) / CMAX_PER_MG] / (1 + T(t)) &times; circadian(t) &times; personal_effect_strength</pre>
+
+          <h3>How to Use It</h3>
+
+          <p>
+            The model is still a planning tool, not a predictor. Your personal
+            threshold is the main thing to set - the level below which you feel
+            worn off. Set it once to match your actual wearing-off time, then
+            use the app to plan timing and dosing changes before trying them.
+          </p>
+
+          <p>
+            Three more sliders map directly onto the concepts above, in case the
+            defaults don't match your own experience:
+          </p>
+
+          <ul style="padding-left: 20px; margin: 0 0 16px 0;">
+            <li><strong>Onset</strong> - how long the prodrug conversion actually takes for you, if not the modelled default.</li>
+            <li><strong>Wearing-off strength</strong> - how aggressively your tolerance compartment builds up through the day.</li>
+            <li><strong>Personal effect strength</strong> - your own correction on top of the dose-normalization, per medication.</li>
+          </ul>
+
+          <img
+            src="../../../assets/medication-calculator-settings.png"
+            alt="The app's in-app help screen, showing each of the three sliders next to a before/after preview of the curve it changes"
+            style="display: block; max-width: 420px; width: 100%; margin: 4px auto 24px auto; border: 1px solid #e8e8e8; border-radius: 12px;"
+          />
+
+          <p>
+            <a href="https://teezeit.github.io/medication-calculator"
+              >Back to App</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
