@@ -189,21 +189,23 @@ dT/dt = k_tol * C(t) - k_deg * T(t)</pre
 
           <p>
             The tricky part is calibrating k_tol. Published values come from
-            euphoria studies in healthy volunteers at recreational doses -
-            completely wrong for ADHD use. Using them makes the model predict
-            wearing-off two to three hours too early. Much tolerance. Very
-            wrong. For therapeutic use, it's about a third of the literature
-            default.
+            euphoria studies in healthy volunteers at recreational doses. Those
+            values predict 67% suppression at peak - accurate for the subjective
+            high, completely wrong for cognitive ADHD effects. Using them makes
+            the model predict wearing-off two to three hours too early. Much
+            tolerance. Very wrong. The right value is about a third of that,
+            calibrated to where people actually report wearing off.
           </p>
 
           <h3>The Circadian Dip</h3>
 
           <p>
             Time of day matters too, independent of drug levels. The
-            mid-afternoon dip is real and lands right when the drug is already
-            descending. A simple cosine term handles this. Whether you feel
-            great on an 8am dose through 6pm some days and crash at 3pm on
-            others under identical conditions - now there's a model for that.
+            mid-afternoon dip is real - roughly 15% reduction in dopaminergic
+            availability, bottoming out around 2:30pm. Small on its own. Landing
+            right when the drug is already descending, it's enough to explain
+            the days where everything falls apart under otherwise identical
+            conditions. A simple cosine term handles this.
           </p>
 
           <div class="chart-card">
@@ -318,11 +320,20 @@ dT/dt = k_tol * C(t) - k_deg * T(t)</pre
           </div>
 
           <p>
-            Why does Concerta's ascending profile matter? Flat delivery causes
-            afternoon tolerance - the system equilibrates to a stable signal and
-            downregulates. A continuously rising profile stays ahead of that.
-            Three Bateman components model this: the IR coat plus two
-            overlapping OROS layers.
+            Why does Concerta's ascending profile matter? Swanson's group tested
+            it directly: flat plasma delivery vs. ascending delivery in children
+            with ADHD, same drug. Flat: afternoon efficacy collapsed. Ascending:
+            full efficacy held. The system adapts to a constant signal. A moving
+            target, it can't keep up with.
+          </p>
+
+          <p>
+            Three Bateman components model this - but not three physical
+            mechanisms. The tablet has two: the IR coat (22%) and the osmotic
+            pump (78%). The pump produces a rising delivery rate, and a single
+            Bateman function can't capture that (it always peaks then falls).
+            Two overlapping OROS components, offset in time, approximate the
+            ascending shape.
           </p>
 
           <h3>The Units Problem</h3>
@@ -386,6 +397,20 @@ effective(t) = [C(t) / CMAX_PER_MG] / (1 + T(t)) &times; circadian(t) &times; pe
             <a href="https://teezeit.github.io/medication-calculator"
               >Back to App</a
             >
+          </p>
+
+          <h3>References</h3>
+
+          <p style="font-size: 13px; color: #555; line-height: 1.8;">
+            Brauer LH, Ambre J, de Wit H (1996). Acute tolerance to subjective but not cardiovascular effects of d-amphetamine in normal, healthy men. <em>J Clin Psychopharmacol</em>, 16(1):72-76.
+            <br>
+            Swanson JM et al. (1999). Acute tolerance to methylphenidate in the treatment of attention deficit hyperactivity disorder in children. <em>Clin Pharmacol Ther</em>, 66(3):295-305.
+            <br>
+            Mager DE et al. (2014). Hysteresis in pharmacokinetic-pharmacodynamic modeling: model selection and diagnostics. <em>J Pharm Pharm Sci</em>.
+            <br>
+            Shappell SA et al. (1996). Chronopharmacodynamics of d-amphetamine: sex differences and menstrual cycle effects. <em>J Clin Pharmacol</em>, 36(4):351-357.
+            <br>
+            Cortese S et al. (2025). Tolerance and tachyphylaxis to stimulant medications in ADHD: a systematic review. <em>Neurosci Biobehav Rev</em>.
           </p>
         </div>
       </div>
